@@ -1,7 +1,14 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import Notiflix from 'notiflix';
-import { selectors } from './refs_for_task2';
+
+const dateTimePickerRef = document.getElementById('datetime-picker');
+const startBtnRef = document.querySelector('[data-start]');
+const daysRef = document.querySelector('[data-days]');
+const hoursRef = document.querySelector('[data-hours]');
+const minutesRef = document.querySelector('[data-minutes]');
+const secondsRef = document.querySelector('[data-seconds]');
+
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -12,19 +19,19 @@ const options = {
     if (selectedDate < new Date()) {
       Notiflix.Notify.failure('Please choose a date in the future');
       resetTimerDisplay();
-      selectors.startBtnRef.disabled = true;
+      startBtnRef.disabled = true;
     } else {
       Notiflix.Notify.success('You selected a valid future date');
-      selectors.startBtnRef.disabled = false;
+      startBtnRef.disabled = false;
     }
   },
 };
 flatpickr('#datetime-picker', options);
-selectors.startBtnRef.disabled = true;
+startBtnRef.disabled = true;
 let countdownInterval;
 function updateTimer() {
   const currentDate = new Date();
-  const targetDate = new Date(selectors.dateTimePickerRef.value);
+  const targetDate = new Date(dateTimePickerRef.value);
   const timeDifference = targetDate - currentDate;
   if (timeDifference <= 0) {
     clearInterval(countdownInterval);
@@ -32,21 +39,21 @@ function updateTimer() {
     return;
   }
   const { days, hours, minutes, seconds } = convertMs(timeDifference);
-  selectors.daysRef.textContent = addLeadingZero(days);
-  selectors.hoursRef.textContent = addLeadingZero(hours);
-  selectors.minutesRef.textContent = addLeadingZero(minutes);
-  selectors.secondsRef.textContent = addLeadingZero(seconds);
+  daysRef.textContent = addLeadingZero(days);
+  hoursRef.textContent = addLeadingZero(hours);
+  minutesRef.textContent = addLeadingZero(minutes);
+  secondsRef.textContent = addLeadingZero(seconds);
 }
-selectors.startBtnRef.addEventListener('click', () => {
+startBtnRef.addEventListener('click', () => {
   clearInterval(countdownInterval);
   updateTimer();
   countdownInterval = setInterval(updateTimer, 1000);
 });
 function resetTimerDisplay() {
-  selectors.daysRef.textContent = '00';
-  selectors.hoursRef.textContent = '00';
-  selectors.minutesRef.textContent = '00';
-  selectors.secondsRef.textContent = '00';
+  daysRef.textContent = '00';
+  hoursRef.textContent = '00';
+  minutesRef.textContent = '00';
+  secondsRef.textContent = '00';
 }
 function addLeadingZero(value) {
   return String(value).padStart(2, '0');
